@@ -1,0 +1,1061 @@
+{
+  "palette": {
+    "ap": "#059669",
+    "cam": "#ea580c",
+    "desk": "#0891b2",
+    "dmz": "#dc2626",
+    "fw": "#7c3aed",
+    "legacy": "#64748b",
+    "media": "#db2777",
+    "mgmt": "#0d9488",
+    "pve": "#2563eb",
+    "vmw": "#1d4ed8",
+    "vpn": "#9333ea",
+    "wan": "#334155",
+    "warn": "#d97706"
+  },
+  "header": {
+    "title": "Example Office network map",
+    "subtitle": "A fictional office used as the built-in sample. Replace it with your own data: edit any section, or start with -seed your-network.json."
+  },
+  "topology": {
+    "title": "Example Office network topology",
+    "subtitle": "Simplified diagram · one firewall, one core switch, six lanes",
+    "internet": {
+      "name": "Internet",
+      "sub": "ISP uplink · 198.51.100.0/29"
+    },
+    "firewall": {
+      "title": "Firewall fw1 (example)",
+      "line1": "WAN 198.51.100.2 · LAN 172.16.0.1",
+      "line2": "DHCP · DNS · NAT"
+    },
+    "switch": {
+      "title": "Core switch sw1 · 48 x 1G + 2 x 10G",
+      "trunkLabel": "802.1q trunk"
+    },
+    "remote": {
+      "title": "Remote access",
+      "color": "vpn",
+      "x": 870,
+      "y": 99,
+      "w": 270,
+      "lines": [
+        {
+          "text": "VPN clients 10.50.0.0/24"
+        },
+        {
+          "text": "Reach every lane"
+        }
+      ]
+    },
+    "dmz": {
+      "title": "DMZ 99",
+      "color": "dmz",
+      "x": 40,
+      "y": 99,
+      "w": 250,
+      "lines": [
+        {
+          "text": "Published host 192.0.2.35"
+        },
+        {
+          "text": "web01 · 172.31.1.10"
+        },
+        {
+          "text": "Only 443 open"
+        }
+      ]
+    },
+    "groups": [
+      {
+        "title": "Wi-Fi",
+        "sub": "VLAN 50 · 60 · 90",
+        "color": "ap",
+        "x": 40,
+        "y": 478,
+        "w": 176,
+        "lines": [
+          {
+            "text": "AP ap1 · port 8"
+          },
+          {
+            "text": "  mgmt 172.16.5.11"
+          },
+          {
+            "text": "AP ap2 · port 9"
+          },
+          {
+            "text": "  mgmt 172.16.5.12"
+          },
+          {
+            "text": "20 devices on 172.16.6.x"
+          },
+          {
+            "text": "guest lane 90: off"
+          }
+        ]
+      },
+      {
+        "title": "Cameras",
+        "sub": "VLAN 30 · 172.16.3.0/24",
+        "color": "cam",
+        "x": 232,
+        "y": 478,
+        "w": 176,
+        "lines": [
+          {
+            "text": "Camera hub · port 11"
+          },
+          {
+            "text": "  172.16.3.10"
+          },
+          {
+            "text": "srv02 · port 18"
+          },
+          {
+            "text": "  172.16.3.20"
+          }
+        ]
+      },
+      {
+        "title": "Servers",
+        "sub": "VLAN 10 · 110–204 · 50",
+        "color": "pve",
+        "x": 424,
+        "y": 478,
+        "w": 176,
+        "lines": [
+          {
+            "text": "host-a 172.16.1.11"
+          },
+          {
+            "text": "host-b 172.16.1.12"
+          },
+          {
+            "text": "host-c (later) .13"
+          },
+          {
+            "text": "cluster 172.20.3.0/24"
+          },
+          {
+            "text": "BMC lane 50"
+          }
+        ]
+      },
+      {
+        "title": "Hypervisor",
+        "sub": "port 36 · 99 Mb/s!",
+        "color": "vmw",
+        "x": 616,
+        "y": 478,
+        "w": 176,
+        "lines": [
+          {
+            "text": "host-c · port 36"
+          },
+          {
+            "text": "172.16.1.13"
+          },
+          {
+            "text": "trunk, all VLANs"
+          },
+          {
+            "text": "link at 99 Mb/s",
+            "warn": true
+          }
+        ]
+      },
+      {
+        "title": "Legacy",
+        "sub": "VLAN 1 · retiring legacy",
+        "color": "legacy",
+        "x": 808,
+        "y": 478,
+        "w": 176,
+        "lines": [
+          {
+            "text": "nas1 · port 24"
+          },
+          {
+            "text": "  172.16.1.40"
+          },
+          {
+            "text": "branch switch · port 47"
+          },
+          {
+            "text": "old flat network"
+          }
+        ]
+      },
+      {
+        "title": "Desktops",
+        "sub": "VLAN 20 · 172.16.2.0/24",
+        "color": "desk",
+        "x": 1000,
+        "y": 478,
+        "w": 176,
+        "lines": [
+          {
+            "text": "desk-a · port 21"
+          },
+          {
+            "text": "  172.16.2.21"
+          },
+          {
+            "text": "desk-b · port 22"
+          },
+          {
+            "text": "  172.16.2.22"
+          }
+        ]
+      }
+    ],
+    "legend": [
+      {
+        "color": "fw",
+        "text": "Core trunk"
+      },
+      {
+        "color": "dmz",
+        "text": "DMZ 99"
+      },
+      {
+        "color": "mgmt",
+        "text": "Management 50"
+      },
+      {
+        "color": "ap",
+        "text": "Wi-Fi 60"
+      },
+      {
+        "color": "cam",
+        "text": "Cameras 30"
+      },
+      {
+        "color": "pve",
+        "text": "Servers 10/110–204"
+      },
+      {
+        "color": "vmw",
+        "text": "Hypervisor"
+      },
+      {
+        "color": "legacy",
+        "text": "Legacy 1"
+      },
+      {
+        "color": "vpn",
+        "text": "VPN"
+      }
+    ]
+  },
+  "switch": {
+    "title": "Switch sw1 port map",
+    "subtitle": "Front panel, ports 1-48 · filled = in use, dashed = reserved, faint = free",
+    "chassis": "EXAMPLE  sw1 · mgmt 172.16.5.1 (Fa0)",
+    "teLabels": [
+      "Te1",
+      "Te2"
+    ],
+    "teNote": "10G · off",
+    "ports": [
+      {
+        "n": 1,
+        "role": "fw",
+        "state": "used"
+      },
+      {
+        "n": 2,
+        "role": "pve",
+        "state": "used"
+      },
+      {
+        "n": 3,
+        "role": "pve",
+        "state": "used"
+      },
+      {
+        "n": 4,
+        "role": "pve",
+        "state": "used"
+      },
+      {
+        "n": 5,
+        "role": "pve",
+        "state": "used"
+      },
+      {
+        "n": 6,
+        "role": "pve",
+        "state": "reserved"
+      },
+      {
+        "n": 7,
+        "role": "pve",
+        "state": "reserved"
+      },
+      {
+        "n": 8,
+        "role": "ap",
+        "state": "used"
+      },
+      {
+        "n": 9,
+        "role": "ap",
+        "state": "used"
+      },
+      {
+        "n": 10,
+        "role": "ap",
+        "state": "free"
+      },
+      {
+        "n": 11,
+        "role": "cam",
+        "state": "used"
+      },
+      {
+        "n": 12,
+        "role": "cam",
+        "state": "free"
+      },
+      {
+        "n": 13,
+        "role": "cam",
+        "state": "free"
+      },
+      {
+        "n": 14,
+        "role": "cam",
+        "state": "free"
+      },
+      {
+        "n": 15,
+        "role": "cam",
+        "state": "free"
+      },
+      {
+        "n": 16,
+        "role": "cam",
+        "state": "free"
+      },
+      {
+        "n": 17,
+        "role": "cam",
+        "state": "free"
+      },
+      {
+        "n": 18,
+        "role": "cam",
+        "state": "used",
+        "flag": true
+      },
+      {
+        "n": 19,
+        "role": "desk",
+        "state": "free"
+      },
+      {
+        "n": 20,
+        "role": "desk",
+        "state": "free"
+      },
+      {
+        "n": 21,
+        "role": "desk",
+        "state": "used"
+      },
+      {
+        "n": 22,
+        "role": "desk",
+        "state": "used"
+      },
+      {
+        "n": 23,
+        "role": "media",
+        "state": "free"
+      },
+      {
+        "n": 24,
+        "role": "legacy",
+        "state": "used"
+      },
+      {
+        "n": 25,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 26,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 27,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 28,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 29,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 30,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 31,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 32,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 33,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 34,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 35,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 36,
+        "role": "vmw",
+        "state": "used"
+      },
+      {
+        "n": 37,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 38,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 39,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 40,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 41,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 42,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 43,
+        "role": "legacy",
+        "state": "free"
+      },
+      {
+        "n": 44,
+        "role": "mgmt",
+        "state": "used"
+      },
+      {
+        "n": 45,
+        "role": "mgmt",
+        "state": "used"
+      },
+      {
+        "n": 46,
+        "role": "mgmt",
+        "state": "used"
+      },
+      {
+        "n": 47,
+        "role": "legacy",
+        "state": "used"
+      },
+      {
+        "n": 48,
+        "role": "dmz",
+        "state": "used"
+      }
+    ],
+    "callouts": [
+      {
+        "port": 1,
+        "label": "Firewall fw1 · LAN",
+        "sub": "trunk · .1 of every lane",
+        "dy": -70,
+        "top": true,
+        "dx": -10
+      },
+      {
+        "port": 9,
+        "label": "Wi-Fi AP ap2",
+        "sub": "172.16.5.12",
+        "dy": -110,
+        "top": true,
+        "dx": 10
+      },
+      {
+        "port": 11,
+        "label": "Camera hub",
+        "sub": "172.16.3.10",
+        "dy": -48,
+        "top": true,
+        "dx": 90
+      },
+      {
+        "port": 47,
+        "label": "Branch switch sw2",
+        "sub": "172.16.5.2 · uplink",
+        "dy": -70,
+        "top": true,
+        "dx": -40
+      },
+      {
+        "port": 8,
+        "label": "Wi-Fi AP ap1",
+        "sub": "172.16.5.11",
+        "dy": 96,
+        "top": false,
+        "dx": 40
+      },
+      {
+        "port": 18,
+        "label": "srv02 · file server",
+        "sub": "Example OS · 172.16.3.20",
+        "dy": 150,
+        "top": false,
+        "dx": -60,
+        "color": "warn"
+      },
+      {
+        "port": 21,
+        "label": "desk-a",
+        "sub": "172.16.2.21",
+        "dy": -70,
+        "top": true,
+        "dx": 70
+      },
+      {
+        "port": 22,
+        "label": "desk-b",
+        "sub": "172.16.2.22",
+        "dy": 96,
+        "top": false,
+        "dx": -20
+      },
+      {
+        "port": 24,
+        "label": "nas1",
+        "sub": "172.16.1.40",
+        "dy": 50,
+        "top": false,
+        "dx": 60
+      },
+      {
+        "port": 36,
+        "label": "Hypervisor host-c",
+        "sub": "172.16.1.13 · 1 Gb/s",
+        "dy": 96,
+        "top": false,
+        "dx": 0
+      },
+      {
+        "port": 48,
+        "label": "Firewall fw1 · DMZ",
+        "sub": "172.31.1.1 (VLAN 99)",
+        "dy": 50,
+        "top": false,
+        "dx": 30
+      }
+    ],
+    "brackets": [
+      {
+        "colFrom": 1,
+        "colTo": 3,
+        "color": "pve",
+        "stemMid": false,
+        "stemDx": 40,
+        "stemLen": 26,
+        "dashed": false,
+        "anchor": "start",
+        "textDx": -40,
+        "titleDy": 58,
+        "subDy": 74,
+        "title": "Hypervisor data pairs",
+        "sub": "2+3 host-a · 4+5 host-b · 6+7 host-c (later)"
+      },
+      {
+        "colFrom": 21,
+        "colTo": 22,
+        "color": "mgmt",
+        "stemMid": true,
+        "stemDx": 0,
+        "stemLen": 136,
+        "dashed": true,
+        "anchor": "middle",
+        "textDx": 0,
+        "titleDy": 170,
+        "subDy": 186,
+        "title": "Server management (BMC) · lane 50",
+        "sub": "44 host-a .11 · 45 host-b .12 · 46 host-c .13"
+      }
+    ],
+    "legend": [
+      {
+        "color": "fw",
+        "text": "Firewall"
+      },
+      {
+        "color": "pve",
+        "text": "Hypervisor data"
+      },
+      {
+        "color": "mgmt",
+        "text": "Server mgmt · 50"
+      },
+      {
+        "color": "ap",
+        "text": "Wi-Fi APs · 50/60"
+      },
+      {
+        "color": "cam",
+        "text": "Cameras · 30"
+      },
+      {
+        "color": "desk",
+        "text": "Desktops · 20"
+      },
+      {
+        "color": "media",
+        "text": "Media · 40"
+      },
+      {
+        "color": "legacy",
+        "text": "Legacy 172.16.1.x"
+      },
+      {
+        "color": "vmw",
+        "text": "Hypervisor trunk"
+      },
+      {
+        "color": "dmz",
+        "text": "DMZ · 99"
+      }
+    ],
+    "legendNote": "Orange ! = needs attention. Click any port to edit it."
+  },
+  "portTable": {
+    "title": "Switch sw1 — port by port",
+    "headers": [
+      "Port",
+      "Device",
+      "Address",
+      "VLAN / mode"
+    ],
+    "rows": [
+      [
+        "<b>Gi1/0/1</b>",
+        "<b>Firewall fw1</b> · LAN port",
+        "trunk lane gateway · 172.16.0.1",
+        "trunk: native 1 + 10–106, 90, 110–204"
+      ],
+      [
+        "<b>Gi1/0/2 + 3</b>",
+        "<b>host-a</b> data pair (Po1)",
+        "will be 172.16.1.11",
+        "LACP trunk · suspended until bonds are up"
+      ],
+      [
+        "<b>Gi1/0/4 + 5</b>",
+        "<b>host-b</b> data pair (Po2)",
+        "will be 172.16.1.12",
+        "LACP trunk · <b>port 5 at 99 Mb/s: swap cable</b>"
+      ],
+      [
+        "Gi1/0/6 + 7",
+        "host-c data pair (Po3)",
+        "reserved",
+        "LACP trunk · empty until host-c moves"
+      ],
+      [
+        "<b>Gi1/0/8</b>",
+        "Wi-Fi AP ap1",
+        "172.16.5.11",
+        "native 50, tagged 60 · PoE"
+      ],
+      [
+        "<b>Gi1/0/9</b>",
+        "Wi-Fi AP ap2",
+        "172.16.5.12",
+        "native 50, tagged 60 · PoE"
+      ],
+      [
+        "Gi1/0/10",
+        "spare AP port",
+        "—",
+        "native 50, tagged 60, 90"
+      ],
+      [
+        "<b>Gi1/0/11</b>",
+        "Camera hub",
+        "172.16.3.10",
+        "access 30"
+      ],
+      [
+        "<b>Gi1/0/18</b>",
+        "srv02 file server",
+        "172.16.3.20",
+        "access 30 · <b>move to port 25 (legacy)</b>"
+      ],
+      [
+        "Gi1/0/12–18",
+        "cameras",
+        "DHCP",
+        "access 30"
+      ],
+      [
+        "Gi1/0/19–20",
+        "desktops (spare)",
+        "DHCP",
+        "access 20"
+      ],
+      [
+        "<b>Gi1/0/21</b>",
+        "desk-a",
+        "172.16.2.21",
+        "access 20"
+      ],
+      [
+        "<b>Gi1/0/22</b>",
+        "desk-b",
+        "172.16.2.22",
+        "access 20"
+      ],
+      [
+        "Gi1/0/23",
+        "media player",
+        "172.16.4.10",
+        "access 40"
+      ],
+      [
+        "<b>Gi1/0/24</b>",
+        "nas1",
+        "172.16.1.40",
+        "access 1 · 1 Gb/s"
+      ],
+      [
+        "Gi1/0/25–46",
+        "legacy flat network",
+        "DHCP",
+        "access 1 (34, 35, 37–39 now empty)"
+      ],
+      [
+        "<b>Gi1/0/36</b>",
+        "host-c hypervisor",
+        "172.16.1.13",
+        "trunk, all VLANs · <b>99 Mb/s even with a good cable</b>"
+      ],
+      [
+        "<b>Gi1/0/44</b>",
+        "host-a BMC",
+        "172.16.5.21",
+        "access 50"
+      ],
+      [
+        "<b>Gi1/0/45</b>",
+        "host-b BMC",
+        "172.16.5.22",
+        "access 50"
+      ],
+      [
+        "<b>Gi1/0/46</b>",
+        "host-c BMC",
+        "172.16.5.23",
+        "access 50"
+      ],
+      [
+        "<b>Gi1/0/47</b>",
+        "Branch switch sw2 uplink",
+        "172.16.5.2",
+        "access 1"
+      ],
+      [
+        "<b>Gi1/0/48</b>",
+        "Firewall fw1 · DMZ port",
+        "172.31.1.1",
+        "access 99"
+      ],
+      [
+        "Te1/0/1–2",
+        "10G ports",
+        "—",
+        "shut down"
+      ]
+    ]
+  },
+  "vlans": {
+    "title": "Network lanes (VLANs)",
+    "headers": [
+      "VLAN",
+      "Name",
+      "Subnet",
+      "Gateway",
+      "DHCP / notes"
+    ],
+    "rows": [
+      [
+        "1 (untagged)",
+        "Legacy",
+        "172.16.1.0/24",
+        "172.16.1.1 (alias on fw1)",
+        "— · to be retired after the server move"
+      ],
+      [
+        "10",
+        "Servers",
+        "172.16.11.0/24",
+        "172.16.11.1",
+        "reservations only · hosts .11–.13"
+      ],
+      [
+        "20",
+        "Desktops",
+        "172.16.2.0/24",
+        "172.16.2.1",
+        "DHCP .100–.199"
+      ],
+      [
+        "30",
+        "Cameras",
+        "172.16.3.0/24",
+        "172.16.3.1",
+        "DHCP .100–.199 · isolated"
+      ],
+      [
+        "40",
+        "Media",
+        "172.16.4.0/24",
+        "172.16.4.1",
+        "DHCP .100–.199"
+      ],
+      [
+        "50",
+        "Management",
+        "172.16.5.0/24",
+        "172.16.5.1",
+        "static only · BMC, APs, switches"
+      ],
+      [
+        "60",
+        "Wi-Fi",
+        "172.16.6.0/24",
+        "172.16.6.1",
+        "DHCP .20–.250"
+      ],
+      [
+        "90",
+        "Guest Wi-Fi",
+        "172.16.9.0/24",
+        "172.16.9.1",
+        "currently off"
+      ],
+      [
+        "110",
+        "Storage",
+        "172.20.1.0/24",
+        "172.20.1.1",
+        "static only"
+      ],
+      [
+        "120",
+        "Cluster",
+        "172.20.2.0/24",
+        "172.20.2.1",
+        "static only"
+      ],
+      [
+        "130",
+        "VM desktops",
+        "172.20.3.0/24",
+        "172.20.3.1",
+        "DHCP .100–.199"
+      ],
+      [
+        "140",
+        "Containers",
+        "172.20.4.0/24",
+        "172.20.4.1",
+        "static only"
+      ],
+      [
+        "200",
+        "Sandbox",
+        "172.30.0.0/24",
+        "172.30.0.1",
+        "no routing out"
+      ],
+      [
+        "99",
+        "DMZ",
+        "172.31.1.0/24",
+        "172.31.1.1",
+        "published services only"
+      ],
+      [
+        "VPN",
+        "Remote access",
+        "10.50.0.0/24",
+        "10.50.0.1",
+        "clients get .10–.99"
+      ]
+    ],
+    "note": "Documentation addresses only: <code>192.0.2.0/24</code> and <code>198.51.100.0/24</code> stand for public space."
+  },
+  "devices": {
+    "title": "Key devices",
+    "headers": [
+      "Device",
+      "Address",
+      "Notes"
+    ],
+    "rows": [
+      [
+        "Firewall fw1",
+        "https://172.16.0.1",
+        "WAN 198.51.100.2 · DMZ published 192.0.2.35"
+      ],
+      [
+        "Core switch sw1",
+        "ssh 172.16.5.1",
+        "management on the dedicated Fa0 port"
+      ],
+      [
+        "Branch switch sw2",
+        "172.16.5.2",
+        "uplink on port 47"
+      ],
+      [
+        "host-a",
+        "172.16.1.11",
+        "BMC 172.16.5.21"
+      ],
+      [
+        "host-b",
+        "172.16.1.12",
+        "BMC 172.16.5.22"
+      ],
+      [
+        "host-c",
+        "172.16.1.13",
+        "BMC 172.16.5.23 · link at 99 Mb/s"
+      ],
+      [
+        "nas1",
+        "172.16.1.40",
+        "backup target · nightly"
+      ],
+      [
+        "srv01",
+        "172.16.3.5",
+        "directory + DNS"
+      ],
+      [
+        "srv02",
+        "172.16.3.20",
+        "file server · move to legacy lane"
+      ],
+      [
+        "ap1",
+        "172.16.5.11",
+        "Wi-Fi · port 8"
+      ],
+      [
+        "ap2",
+        "172.16.5.12",
+        "Wi-Fi · port 9"
+      ],
+      [
+        "Camera hub",
+        "172.16.3.10",
+        "recorder"
+      ],
+      [
+        "desk-a",
+        "172.16.2.21",
+        "desktop"
+      ],
+      [
+        "desk-b",
+        "172.16.2.22",
+        "desktop"
+      ]
+    ],
+    "note": "Everything here is invented sample data. <b>Edit freely</b>; every save is a commit."
+  },
+  "before": {
+    "title": "Before you power off",
+    "items": [
+      "Save the switch configuration",
+      "Note which cables go to which port",
+      "Stop virtual machines on <b>host-a</b>",
+      "Confirm the backup on <b>nas1</b> finished",
+      "Tell people the network will be down"
+    ]
+  },
+  "hardware": {
+    "title": "Hardware checklist (lids open)",
+    "items": [
+      "Reseat memory on host-b",
+      "Replace the failed fan in host-c",
+      "Label both power supplies",
+      "Swap the port 5 cable",
+      "Check the UPS battery date"
+    ]
+  },
+  "after": {
+    "title": "After power-up",
+    "items": [
+      "Confirm the firewall has a WAN address",
+      "Check every trunk shows up on the switch",
+      "Start virtual machines in order",
+      "Run a speed test from a desktop"
+    ]
+  },
+  "power": {
+    "title": "Power-up order",
+    "items": [
+      "UPS",
+      "Firewall <b>fw1</b>",
+      "Core switch <b>sw1</b>",
+      "<b>nas1</b>",
+      "Hypervisors <b>host-a</b>, <b>host-b</b>, <b>host-c</b>",
+      "Access points",
+      "Everything else"
+    ]
+  }
+}

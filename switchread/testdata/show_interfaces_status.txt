@@ -1,0 +1,58 @@
+
+
+Port      Name               Status       Vlan       Duplex  Speed Type 
+Gi1/0/1   fw1 LAN trunk      connected    trunk      a-full a-1000 10/100/1000BaseTX
+Gi1/0/2   host-a bond (Po1)  suspended    trunk        auto   auto 10/100/1000BaseTX
+Gi1/0/3   host-a bond (Po1)  notconnect   trunk        auto   auto 10/100/1000BaseTX
+Gi1/0/4   host-b bond (Po2)  suspended    trunk        auto   auto 10/100/1000BaseTX
+Gi1/0/5   host-b bond (Po2)  suspended    trunk      a-full  a-100 10/100/1000BaseTX
+Gi1/0/6   host-c bond (Po3)  notconnect   trunk        auto   auto 10/100/1000BaseTX
+Gi1/0/7   host-c bond (Po3)  notconnect   trunk        auto   auto 10/100/1000BaseTX
+Gi1/0/8   AP (PoE): ap1      connected    trunk      a-full a-1000 10/100/1000BaseTX
+Gi1/0/9   AP (PoE): ap2      connected    trunk      a-full a-1000 10/100/1000BaseTX
+Gi1/0/10  spare AP port      notconnect   50           auto   auto 10/100/1000BaseTX
+Gi1/0/11  Camera hub         connected    30         a-full a-1000 10/100/1000BaseTX
+Gi1/0/12  camera lane        notconnect   30           auto   auto 10/100/1000BaseTX
+Gi1/0/13  camera lane        notconnect   30           auto   auto 10/100/1000BaseTX
+Gi1/0/14  camera lane        notconnect   30           auto   auto 10/100/1000BaseTX
+Gi1/0/15  camera lane        notconnect   30           auto   auto 10/100/1000BaseTX
+Gi1/0/16  camera lane        notconnect   30           auto   auto 10/100/1000BaseTX
+Gi1/0/17  camera lane        notconnect   30           auto   auto 10/100/1000BaseTX
+Gi1/0/18  srv02 file server  connected    30         a-full a-1000 10/100/1000BaseTX
+Gi1/0/19  desk spare         notconnect   20           auto   auto 10/100/1000BaseTX
+Gi1/0/20  desk spare         notconnect   20           auto   auto 10/100/1000BaseTX
+Gi1/0/21  desk-a             connected    20         a-full a-1000 10/100/1000BaseTX
+Gi1/0/22                     notconnect   20           auto   auto 10/100/1000BaseTX
+Gi1/0/23  media player       notconnect   40           auto   auto 10/100/1000BaseTX
+Gi1/0/24  nas1               connected    1          a-full a-1000 10/100/1000BaseTX
+Gi1/0/25  ex-laptop          connected    1          a-full a-1000 10/100/1000BaseTX
+Gi1/0/26  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/27  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/28  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/29  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/30  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/31  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/32  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/33  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/34  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/35  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/36  host-c trunk       connected    trunk      a-full  a-100 10/100/1000BaseTX
+Gi1/0/37  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/38  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/39  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/40  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/41  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/42  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/43  legacy             notconnect   1            auto   auto 10/100/1000BaseTX
+Gi1/0/44  BMC lane 50: host  notconnect   50           auto   auto 10/100/1000BaseTX
+Gi1/0/45  BMC lane 50: host  connected    50         a-full a-1000 10/100/1000BaseTX
+Gi1/0/46  BMC lane 50: host  connected    50         a-full a-1000 10/100/1000BaseTX
+Gi1/0/47  uplink to branch s connected    1          a-full a-1000 10/100/1000BaseTX
+Gi1/0/48  fw1 DMZ lane       connected    99         a-full a-1000 10/100/1000BaseTX
+Gi1/0/49                     notconnect   1            auto   auto 1000BaseSX SFP
+Te1/0/1   reserved 10G       disabled     1            full    10G SFP-10GBase-SR
+Te1/0/2   reserved 10G       disabled     1            full    10G SFP-10GBase-SR
+Po1                          notconnect   trunk        auto   auto 
+Po2                          notconnect   trunk        auto   auto 
+Po3                          notconnect   trunk        auto   auto 
+Fa0       Management         connected    routed     a-full  a-100 10/100BaseTX

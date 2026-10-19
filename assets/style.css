@@ -1,0 +1,24 @@
+/* layout: one column sheet; diagram panel first, open items, then reference tables; prints landscape */
+:root{--bg:#eef2f7;--panel:#ffffffd9;--fg:#1e2b3c;--muted:#52637a;--line:#cdd8e6;--accent:#2563eb;--head:#e4ecf6;--warn:#b45309;
+--display:Manrope,Inter,system-ui,sans-serif;--body:Inter,system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111821;--panel:#1a2430;--fg:#e4ebf3;--muted:#9fb0c4;--line:#2c3a4b;--accent:#7aa7ff;--head:#223040;--warn:#fbbf24;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111821;--panel:#1a2430;--fg:#e4ebf3;--muted:#9fb0c4;--line:#2c3a4b;--accent:#7aa7ff;--head:#223040;--warn:#fbbf24;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px;line-height:1.45}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:28px 48px;display:grid;gap:28px}
+h1{font-family:var(--display);font-size:30px;margin:0;text-wrap:balance}
+h2{font-family:var(--display);font-size:19px;margin:0 0 10px}
+.sub{color:var(--muted);margin:4px 0 0}
+.diagram{overflow-x:auto;border-radius:22px}
+.diagram svg{display:block;min-width:900px;width:100%;height:auto}
+section{min-width:0}
+.tw{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--head);padding:8px 12px}
+td{padding:7px 12px;border-top:1px solid var(--line);vertical-align:top}
+td:first-child{white-space:nowrap}
+.note{color:var(--muted);font-size:13px}
+ul.todo{margin:6px 0 0;padding-left:20px;display:grid;gap:4px} ul.todo li::marker{color:var(--warn)}
+ol{margin:6px 0 0;padding-left:20px;display:grid;gap:4px} code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;overflow-wrap:anywhere}
+@page{size:letter landscape;margin:12mm}
+@media print{:root{--bg:#fff;--panel:#fff;--fg:#111;--muted:#444;--line:#bbb;--head:#eef2f7;color-scheme:light}
+.wrap{padding:0;gap:16px;max-width:none} .diagram svg{min-width:0} section{break-inside:avoid} .pb{break-before:page} body{font-size:12px} td{padding:5px 10px}}

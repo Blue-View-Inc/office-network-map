@@ -1,0 +1,28 @@
+          Mac Address Table
+-------------------------------------------
+
+Vlan    Mac Address       Type        Ports
+----    -----------       --------    -----
+   1    0200.5e00.0001    DYNAMIC     Gi1/0/1
+ 30     0200.5e00.0001    DYNAMIC     Gi1/0/1
+ 50     0200.5e00.0001    DYNAMIC     Gi1/0/1
+ 20     0200.5e00.0001    DYNAMIC     Gi1/0/1
+ 30     0200.5e00.0011    DYNAMIC     Gi1/0/11
+ 30     0200.5e00.0012    DYNAMIC     Gi1/0/18
+ 20     0200.5e00.0021    DYNAMIC     Gi1/0/21
+   1    0200.5e00.0024    DYNAMIC     Gi1/0/24
+   1    0200.5e00.0025    DYNAMIC     Gi1/0/25
+   1    0200.5e00.0026    DYNAMIC     Gi1/0/25
+   1    0200.5e00.0036    DYNAMIC     Gi1/0/36
+ 99     0200.5e00.0036    DYNAMIC     Gi1/0/36
+ 10     0200.5e00.0036    DYNAMIC     Gi1/0/36
+ 10     0200.5e00.0037    DYNAMIC     Gi1/0/36
+ 50     0200.5e00.0045    DYNAMIC     Gi1/0/45
+ 50     0200.5e00.0046    DYNAMIC     Gi1/0/46
+   1    0200.5e00.0047    DYNAMIC     Gi1/0/47
+ 99     0200.5e00.0048    DYNAMIC     Gi1/0/48
+ 50     0200.5e00.0008    DYNAMIC     Gi1/0/8
+ 60     0200.5e00.0008    DYNAMIC     Gi1/0/8
+ 60     0200.5e00.0009    DYNAMIC     Gi1/0/9
+ 60     0200.5e00.000a    DYNAMIC     Gi1/0/9
+Total Mac Addresses for this criterion: 22

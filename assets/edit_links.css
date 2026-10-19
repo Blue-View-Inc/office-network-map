@@ -1,0 +1,11 @@
+.ed{font:600 12px/1 var(--body);color:var(--accent);text-decoration:none;opacity:.75;padding:4px 8px;border-radius:8px}
+.ed:hover{opacity:1;background:var(--head)}
+section>.ed,.edbar{float:right}
+.edbar{display:flex;gap:6px}
+.diagram{position:relative}
+.ed.corner{position:sticky;float:right;right:22px;top:22px;height:0;margin:22px 22px 0 0;z-index:2}
+.banner{background:var(--panel);border:1px solid var(--warn);border-radius:12px;padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.banner form{display:inline;margin:0}
+.banner button{font:600 13px var(--body);border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;padding:6px 12px;cursor:pointer}
+@media print{.ed,.edbar,.banner{display:none!important}}
+@media screen{svg a.pl{cursor:pointer}svg a.pl:hover rect,svg a.pl:focus rect{stroke:#2563eb;stroke-width:2.4;stroke-dasharray:none}}
