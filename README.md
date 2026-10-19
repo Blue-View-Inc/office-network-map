@@ -20,6 +20,10 @@ and a read-only switch reader shows where the map and the real switch disagree.
 - **History you can trust:** every save is a git commit; view any old version, restore it as a new commit. Nothing is rewritten.
 - **Printable:** `/pdf` renders a clean landscape PDF through headless Chrome.
 - **Read the real switch (read-only):** connects to a Cisco IOS switch over SSH with a hard allowlist of four `show` commands, compares lanes, link state and descriptions with the map, and lets you pull switch values into the map.
+- **Pop-up port editor:** clicking a port opens the same form in a dialog over the map (links still work without JavaScript); saving refreshes the map in place.
+- **Live status (read-only, optional):** `-live` pings the addresses in the map and, if the switch reader is configured, reads link state and MAC tables. Ports get status dots, device rows get online/offline pills, the header shows "Live · updated 12s ago". Screen only, never in print or history.
+- **Change alerts:** new/moved/gone MACs, link up/down, devices offline too long (or back), switch VLAN differing from the map lane. Each can be accepted into the map (opens the port editor pre-filled) or ignored. Nothing is ever written to the switch.
+- **Themeable:** `-theme DIR` links your own CSS after the built-in styles; the new UI is styled through `--om-*` variables.
 - **One small binary:** Go standard library plus `golang.org/x/crypto`; no database, no JavaScript framework.
 
 It ships with a fictional "Example Office" (documentation addresses only) so you can try it immediately — the screenshots above are that sample.
@@ -43,13 +47,47 @@ It ships with a fictional "Example Office" (documentation addresses only) so you
 | `-git-name`  | `Office Map`                  | committer name for edits                                      |
 | `-git-email` | `office-map@localhost`        | committer email for edits                                     |
 
+Extra flags:
+
+| Flag             | Default | Meaning                                                                      |
+|------------------|---------|------------------------------------------------------------------------------|
+| `-live`          | off     | poll switch + ping devices; enables `/events`, `/live.json`, alerts           |
+| `-live-every`    | `30s`   | poll interval                                                                |
+| `-offline-after` | `10m`   | alert when a device has not answered ping this long                          |
+| `-state`         | `<data>/../state` | directory for `alerts.json` (kept outside the git-tracked data dir) |
+| `-theme`         | (none)  | directory of `*.css` (plus `.woff2 .woff .png .svg .jpg`) served at `/theme/` and linked after the built-in styles on every page, print included |
+
 Requires `git` (always) and `google-chrome` or `chromium` in PATH (only for `/pdf`).
 There is no login: keep it on localhost or behind your own proxy/auth.
 
 Routes: `/` map, `/edit/<section>` (header, topology, ports, porttable, vlans,
 devices, before, hardware, after, power), `/edit/port/<n>` (one port; `te1`/`te2`
 for the 10G labels), `/history`, `/history/<hash>` (read-only view), `/switch`,
-`/pdf`, `/data.json`.
+`/pdf`, `/data.json`, `/live.json`, `/events` (Server-Sent Events), `/alerts`,
+`POST /alerts/{id}/ignore|accept`. Add `?fragment=1` to `/` or `/edit/port/N` for just the HTML fragment.
+
+## Live status and alerts
+
+![Live badge and alerts banner](docs/live.png)
+
+With `-live`, a poller runs every `-live-every`: it runs `show interfaces status` and
+`show mac address-table dynamic` through the read-only switch connector (if configured) and
+`ping -c1 -W1` against every IPv4 address in the port and devices tables (ranges and DHCP text
+are skipped; 16 probes at a time). The page follows `/events`; `/live.json` is the same snapshot.
+Port dots: green up, grey down, dark disabled, amber slower than 1000 Mb/s where the map
+expects a link, red outline when the switch VLAN differs from the map lane. Alerts are stored in
+`alerts.json` under `-state` and de-duplicated; ignored alerts do not come back. Accepting an alert
+only pre-fills the port form, so map changes still go through the normal edit and commit flow.
+
+## Theming
+
+`-theme DIR` serves the `*.css` files in DIR (sorted) as `/theme/<name>.css` and links them after the
+built-in styles on every page. The pop-up, live badge, dots, pills and alerts read these variables,
+declared once in `assets/ui.css` with the app's own colours as defaults: `--om-surface`,
+`--om-surface-strong`, `--om-edge`, `--om-shadow`, `--om-blur`, `--om-radius-panel`, `--om-radius-card`,
+`--om-radius-chip`, `--om-ink`, `--om-ink-muted`, `--om-accent`, `--om-up`, `--om-slow`, `--om-down`,
+`--om-unknown`, `--om-disabled`, `--om-font-head`, `--om-font-body`. A theme only has to remap them.
+Nothing from the theme directory is embedded or committed.
 
 ## Data and history
 
