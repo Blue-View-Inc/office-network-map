@@ -1,11 +1,30 @@
 # office-map
 
-A living, editable network map for a small office: a topology diagram, a
-48-port switch front panel, and the reference tables around them (port table,
-VLANs, key devices, checklists). Everything is one JSON document; every edit is
-a git commit, so the page has full history.
+**A living, editable network map for a small office.** One JSON file becomes a
+topology diagram, a 48-port switch front panel and the reference tables around
+them. Click a port to edit it, every save is a git commit you can roll back,
+and a read-only switch reader shows where the map and the real switch disagree.
 
-It ships with a fictional "Example Office" so you can try it immediately.
+![Topology diagram rendered by office-map](docs/topology.png)
+
+![Switch front panel: every port coloured by its VLAN, with callouts](docs/switch.png)
+
+| Click any port to edit it | Every change is in history |
+|---|---|
+| ![Per-port edit form](docs/port-edit.png) | ![History with view and restore](docs/history.png) |
+
+## What you get
+
+- **Two diagrams from one file:** network topology and a switch front panel (odd ports top, even bottom, one colour per VLAN, callouts for what is plugged in).
+- **Edit in the browser:** forms per section, plus a compact form behind every port. Drawing and port table stay in sync.
+- **History you can trust:** every save is a git commit; view any old version, restore it as a new commit. Nothing is rewritten.
+- **Printable:** `/pdf` renders a clean landscape PDF through headless Chrome.
+- **Read the real switch (read-only):** connects to a Cisco IOS switch over SSH with a hard allowlist of four `show` commands, compares lanes, link state and descriptions with the map, and lets you pull switch values into the map.
+- **One small binary:** Go standard library plus `golang.org/x/crypto`; no database, no JavaScript framework.
+
+It ships with a fictional "Example Office" (documentation addresses only) so you can try it immediately — the screenshots above are that sample.
+
+> **Keep your real network out of git hosting you don't control.** Run the app with `-seed` pointing at a private `network.json` and keep that data repository private. This repository contains only the app and the sample.
 
 ## Build and test
 

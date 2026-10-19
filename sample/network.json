@@ -145,7 +145,7 @@
       },
       {
         "title": "Hypervisor",
-        "sub": "port 36 · 99 Mb/s!",
+        "sub": "port 36 · 100 Mb/s!",
         "color": "vmw",
         "x": 616,
         "y": 478,
@@ -161,7 +161,7 @@
             "text": "trunk, all VLANs"
           },
           {
-            "text": "link at 99 Mb/s",
+            "text": "link at 100 Mb/s",
             "warn": true
           }
         ]
@@ -694,7 +694,7 @@
         "<b>Gi1/0/4 + 5</b>",
         "<b>host-b</b> data pair (Po2)",
         "will be 172.16.1.12",
-        "LACP trunk · <b>port 5 at 99 Mb/s: swap cable</b>"
+        "LACP trunk · <b>port 5 at 100 Mb/s: swap cable</b>"
       ],
       [
         "Gi1/0/6 + 7",
@@ -778,7 +778,7 @@
         "<b>Gi1/0/36</b>",
         "host-c hypervisor",
         "172.16.1.13",
-        "trunk, all VLANs · <b>99 Mb/s even with a good cable</b>"
+        "trunk, all VLANs · <b>100 Mb/s even with a good cable</b>"
       ],
       [
         "<b>Gi1/0/44</b>",
@@ -972,7 +972,7 @@
       [
         "host-c",
         "172.16.1.13",
-        "BMC 172.16.5.23 · link at 99 Mb/s"
+        "BMC 172.16.5.23 · link at 100 Mb/s"
       ],
       [
         "nas1",
