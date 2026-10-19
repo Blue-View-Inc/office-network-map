@@ -2,11 +2,15 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
+	"time"
 
+	"officemap/live"
 	"officemap/switchread"
 )
 
@@ -23,6 +27,11 @@ func main() {
 	flag.StringVar(&sc.KnownHosts, "switch-known-hosts", "", "OpenSSH known_hosts file (host keys are verified strictly)")
 	flag.StringVar(&sc.HostKeyAlias, "switch-hostkey-alias", "", "look the switch up in known_hosts under this name")
 	flag.StringVar(&sc.Jump, "switch-jump", "", "user@host to hop through (same key)")
+	liveOn := flag.Bool("live", false, "poll the switch and ping devices for live status and change alerts (read-only)")
+	liveEvery := flag.Duration("live-every", 30*time.Second, "live poll interval")
+	offlineAfter := flag.Duration("offline-after", 10*time.Minute, "raise an alert when a device has not answered ping for this long")
+	stateDir := flag.String("state", "", "directory for alerts.json (default: ../state next to the data dir; never inside it)")
+	flag.StringVar(&themeDir, "theme", "", "directory of extra *.css (and fonts/images) linked after the built-in styles")
 	flag.Parse()
 
 	opts := StoreOptions{GitName: *gitName, GitEmail: *gitEmail}
@@ -38,6 +47,19 @@ func main() {
 		log.Fatal(err)
 	}
 	srv := &Server{st: st, sw: newSSHSwitch(sc)}
+	if *liveOn {
+		sd := *stateDir
+		if sd == "" {
+			sd = filepath.Join(filepath.Dir(filepath.Clean(*dir)), "state")
+		}
+		al, err := live.OpenAlerts(filepath.Join(sd, "alerts.json"))
+		if err != nil {
+			log.Fatal(err)
+		}
+		srv.alerts = al
+		srv.startLive(context.Background(), live.Config{Every: *liveEvery, OfflineAfter: *offlineAfter})
+		log.Printf("live status on (every %s, alerts in %s)", *liveEvery, sd)
+	}
 	log.Printf("office-map listening on http://%s (data %s)", *listen, *dir)
 	log.Fatal(http.ListenAndServe(*listen, srv.routes()))
 }

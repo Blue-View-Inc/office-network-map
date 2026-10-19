@@ -296,6 +296,7 @@ func TopoSVG(d *Data) string {
 // Opts controls the page chrome around the map; the zero value is the plain print/PDF page.
 type Opts struct {
 	Edit   bool   // show Edit/History links
+	Live   bool   // the live poller is running (screen UI only)
 	Banner string // trusted HTML shown above the map (history view)
 }
 
@@ -330,6 +331,45 @@ func tableSection(t *Table, class, edit string) string {
 
 // Body renders the map exactly as build.py's office_network_map.html (plus optional edit chrome).
 func Body(d *Data, o Opts) string {
+	var b strings.Builder
+	w := func(s string) { b.WriteString(s) }
+	w("<title>" + esc(d.Header.Title) + "</title>\n")
+	w(`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">` + "\n")
+	w("<style>\n" + styleCSS + "\n</style>\n")
+	if o.Edit {
+		w("<style>\n" + editLinksCSS + "\n" + uiCSS + "\n</style>\n")
+	}
+	w(themeLinks())
+	w(`<div class="wrap">` + "\n")
+	w(o.Banner)
+	bar := ""
+	if o.Edit {
+		badge := `<span id="om-badge" class="om-badge" data-live="0"><i></i>Live off</span>`
+		if o.Live {
+			badge = `<span id="om-badge" class="om-badge" data-live="1"><i></i>Live · starting</span>`
+		}
+		bar = `<div class="edbar">` + badge + `<a class="ed" href="/edit/header">Edit</a><a class="ed" href="/history">History</a><a class="ed" href="/switch">Switch</a></div>`
+	}
+	w("<header>" + bar + "<h1>" + esc(d.Header.Title) + `</h1><p class="sub">` + esc(d.Header.Subtitle) + "</p></header>\n")
+	if o.Edit {
+		w(`<div id="om-alerts" class="om-alerts" hidden></div>` + "\n")
+		w(`<div id="om-main" style="display:contents">`)
+	}
+	w(bodyMain(d, o))
+	if o.Edit {
+		w("</div>\n")
+	}
+	w("</div>")
+	if o.Edit {
+		w("\n" + `<dialog id="om-dlg" class="om-dlg" aria-label="Edit port"><button type="button" class="x" aria-label="Close">&times;</button><div class="om-body"></div></dialog>` + "\n")
+		w("<script>\n" + uiJS + "\n</script>\n")
+	}
+	return b.String()
+}
+
+// bodyMain renders everything below the header: the two diagrams and all sections. The live
+// page re-fetches exactly this (GET /?fragment=1) to refresh the map in place.
+func bodyMain(d *Data, o Opts) string {
 	link := func(sec string) string {
 		if !o.Edit {
 			return ""
@@ -344,19 +384,6 @@ func Body(d *Data, o Opts) string {
 	}
 	var b strings.Builder
 	w := func(s string) { b.WriteString(s) }
-	w("<title>" + esc(d.Header.Title) + "</title>\n")
-	w(`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">` + "\n")
-	w("<style>\n" + styleCSS + "\n</style>\n")
-	if o.Edit {
-		w("<style>\n" + editLinksCSS + "\n</style>\n")
-	}
-	w(`<div class="wrap">` + "\n")
-	w(o.Banner)
-	bar := ""
-	if o.Edit {
-		bar = `<div class="edbar"><a class="ed" href="/edit/header">Edit</a><a class="ed" href="/history">History</a><a class="ed" href="/switch">Switch</a></div>`
-	}
-	w("<header>" + bar + "<h1>" + esc(d.Header.Title) + `</h1><p class="sub">` + esc(d.Header.Subtitle) + "</p></header>\n")
 	w(`<div class="diagram">` + corner("topology") + TopoSVG(d) + "</div>\n")
 	svg := SwitchSVG
 	if o.Edit {
@@ -370,7 +397,6 @@ func Body(d *Data, o Opts) string {
 	w(tableSection(&d.VLANs, ` class="pb"`, link("vlans")) + "\n")
 	w(tableSection(&d.Devices, ` class="pb"`, link("devices")) + "\n")
 	w(`<section>` + link("power") + `<h2>` + esc(d.Power.Title) + `</h2><ol>` + ol(d.Power.Items, "") + "</ol></section>\n")
-	w("</div>")
 	return b.String()
 }
 

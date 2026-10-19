@@ -6,6 +6,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"officemap/live"
 )
 
 // builtinLanes names the standard palette keys when the diagram legend does not.
@@ -102,7 +104,12 @@ func parsePortNum(s string) (n int, te int, ok bool) {
 	return n, 0, true
 }
 
-func (s *Server) renderPort(w http.ResponseWriter, code int, n, te int, d *Data, f portForm, errs []string, summary string) {
+// isFragment reports whether the request wants just the form (for the pop-up dialog).
+func isFragment(r *http.Request) bool { return r.URL.Query().Get("fragment") == "1" }
+
+func (s *Server) renderPort(w http.ResponseWriter, r *http.Request, code int, n, te int, d *Data, f portForm, errs []string, summary string) {
+	frag := isFragment(r)
+	alertID := r.FormValue("alert")
 	b := &formB{d: d}
 	name := strconv.Itoa(n)
 	title := "Port " + name
@@ -113,7 +120,11 @@ func (s *Server) renderPort(w http.ResponseWriter, code int, n, te int, d *Data,
 			title = "10G port " + strconv.Itoa(te)
 		}
 	}
-	b.w(`<header><a href="/">&larr; Back to the map</a><h1>` + esc(title) + `</h1>`)
+	if frag {
+		b.w(`<header><h1>` + esc(title) + `</h1>`)
+	} else {
+		b.w(`<header><a href="/">&larr; Back to the map</a><h1>` + esc(title) + `</h1>`)
+	}
 	if te == 0 {
 		prev, next := "", ""
 		if n > 1 {
@@ -133,6 +144,9 @@ func (s *Server) renderPort(w http.ResponseWriter, code int, n, te int, d *Data,
 		b.w("</ul></div>")
 	}
 	b.w(`<form method="post" action="/edit/port/` + name + `" class="pf">`)
+	if alertID != "" {
+		b.w(`<input type="hidden" name="alert" value="` + esc(alertID) + `">`)
+	}
 	if te > 0 {
 		b.text("Label shown on the diagram", "te", d.Switch.TeLabels[te-1])
 	} else {
@@ -157,7 +171,11 @@ func (s *Server) renderPort(w http.ResponseWriter, code int, n, te int, d *Data,
 		b.field("Callout colour", laneSelect("color", f.Callout.Color, lanes, "(lane colour)"))
 		b.w(`</div></details>`)
 	}
-	b.w(`<div class="bar"><input type="text" name="summary" maxlength="72" placeholder="What changed? (commit note)" value="` + esc(summary) + `"><button type="submit">Save</button><a href="/">Cancel</a></div></form>`)
+	b.w(`<div class="bar"><input type="text" name="summary" maxlength="72" placeholder="What changed? (commit note)" value="` + esc(summary) + `"><button type="submit">Save</button><a href="/" data-close>Cancel</a></div></form>`)
+	if frag {
+		html(w, code, b.String())
+		return
+	}
 	html(w, code, page("Edit - "+title, b.String()))
 }
 
@@ -176,7 +194,10 @@ func (s *Server) portForm(w http.ResponseWriter, r *http.Request) {
 	if te == 0 {
 		f = portFormFor(d, n)
 	}
-	s.renderPort(w, 200, n, te, d, f, nil, "")
+	if te == 0 {
+		s.prefillFromAlert(&f, r.URL.Query().Get("alert"))
+	}
+	s.renderPort(w, r, 200, n, te, d, f, nil, "")
 }
 
 func (s *Server) portSave(w http.ResponseWriter, r *http.Request) {
@@ -210,7 +231,7 @@ func (s *Server) portSave(w http.ResponseWriter, r *http.Request) {
 	}
 	errs := append(p.errs, d.Validate()...)
 	if len(errs) > 0 {
-		s.renderPort(w, http.StatusUnprocessableEntity, n, te, d, shown, errs, summary)
+		s.renderPort(w, r, http.StatusUnprocessableEntity, n, te, d, shown, errs, summary)
 		return
 	}
 	if summary == "" {
@@ -218,6 +239,13 @@ func (s *Server) portSave(w http.ResponseWriter, r *http.Request) {
 	}
 	if err := s.st.Save(d, label+": "+summary); err != nil {
 		s.fail(w, err)
+		return
+	}
+	if s.alerts != nil && r.PostForm.Get("alert") != "" {
+		s.alerts.SetStatus(r.PostForm.Get("alert"), live.StatusAccepted)
+	}
+	if isFragment(r) {
+		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)

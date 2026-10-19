@@ -11,11 +11,16 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"officemap/live"
 )
 
 type Server struct {
 	st *Store
 	sw switchSource // nil when no switch is configured
+
+	lv     *live.Poller // nil unless -live
+	alerts *live.Alerts // nil unless -live
 }
 
 func (s *Server) routes() http.Handler {
@@ -32,6 +37,12 @@ func (s *Server) routes() http.Handler {
 	mux.HandleFunc("POST /switch/sync", s.switchSync)
 	mux.HandleFunc("GET /pdf", s.pdf)
 	mux.HandleFunc("GET /data.json", s.dataJSON)
+	mux.HandleFunc("GET /live.json", s.liveJSON)
+	mux.HandleFunc("GET /events", s.events)
+	mux.HandleFunc("GET /alerts", s.alertsJSON)
+	mux.HandleFunc("POST /alerts/{id}/ignore", s.alertAct(live.StatusIgnored))
+	mux.HandleFunc("POST /alerts/{id}/accept", s.alertAct(live.StatusAccepted))
+	mux.HandleFunc("GET /theme/{name}", s.serveTheme)
 	return sameOrigin(mux)
 }
 
@@ -67,8 +78,12 @@ func (s *Server) index(w http.ResponseWriter, r *http.Request) {
 		s.fail(w, err)
 		return
 	}
+	if isFragment(r) {
+		html(w, 200, bodyMain(d, Opts{Edit: true}))
+		return
+	}
 	// Served without a doctype on purpose: it is the same document the generator wrote.
-	html(w, 200, Body(d, Opts{Edit: true}))
+	html(w, 200, Body(d, Opts{Edit: true, Live: s.lv != nil}))
 }
 
 func (s *Server) dataJSON(w http.ResponseWriter, r *http.Request) {
@@ -85,7 +100,7 @@ const fontLink = `<link rel="stylesheet" href="https://fonts.googleapis.com/css2
 
 func page(title, body string) string {
 	return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>` +
-		esc(title) + `</title>` + fontLink + `<style>` + editCSS + `</style></head><body><div class="wrap">` + body + `</div></body></html>`
+		esc(title) + `</title>` + fontLink + `<style>` + editCSS + "\n" + uiCSS + `</style>` + themeLinks() + `</head><body><div class="wrap">` + body + `</div></body></html>`
 }
 
 func (s *Server) renderForm(w http.ResponseWriter, code int, name string, sec section, d *Data, errs []string, summary string) {
@@ -183,7 +198,7 @@ func (s *Server) view(w http.ResponseWriter, r *http.Request) {
 	}
 	banner := `<div class="banner"><strong>Read-only: version ` + esc(h[:7]) + `</strong> ` + esc(subj) +
 		` <a href="/history">History</a> <form method="post" action="/history/` + esc(h) + `/restore"><button type="submit">Restore this version</button></form></div>` + "\n"
-	html(w, 200, Body(d, Opts{Banner: banner, Edit: false})+"<style>\n"+editLinksCSS+"\n</style>")
+	html(w, 200, Body(d, Opts{Banner: banner, Edit: false})+"<style>\n"+editLinksCSS+"\n"+uiCSS+"\n</style>\n"+themeLinks())
 }
 
 func (s *Server) restore(w http.ResponseWriter, r *http.Request) {
@@ -221,7 +236,7 @@ func (s *Server) pdf(w http.ResponseWriter, r *http.Request) {
 	}
 	defer os.RemoveAll(tmp)
 	in, out := filepath.Join(tmp, "print.html"), filepath.Join(tmp, "map.pdf")
-	if err := os.WriteFile(in, []byte(PrintHTML(d)), 0o644); err != nil {
+	if err := os.WriteFile(in, []byte(printWithBase(PrintHTML(d), r.Host)), 0o644); err != nil {
 		s.fail(w, err)
 		return
 	}
@@ -245,4 +260,12 @@ func (s *Server) pdf(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/pdf")
 	w.Header().Set("Content-Disposition", `inline; filename="Office_Network_Map.pdf"`)
 	http.ServeContent(w, r, "Office_Network_Map.pdf", time.Now(), f)
+}
+
+// printWithBase lets the theme's /theme/ links resolve when Chrome prints from a temp file.
+func printWithBase(h, host string) string {
+	if themeDir == "" {
+		return h
+	}
+	return strings.Replace(h, "<head>", `<head><base href="http://`+esc(host)+`/">`, 1)
 }
